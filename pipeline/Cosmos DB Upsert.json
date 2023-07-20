@@ -1,6 +1,7 @@
 {
 	"name": "Cosmos DB Upsert",
 	"properties": {
+		"description": "Testing Git repo with this description property .",
 		"activities": [
 			{
 				"name": "Cosmos db Orders Copy Upsert",
