@@ -1,0 +1,9 @@
+{
+	"name": "SravzDFJuly2023",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "31931e8b-93ef-48b1-8d48-eae53d750fec",
+		"tenantId": "2a962c40-f516-420b-980d-36170d1d070b"
+	}
+}
