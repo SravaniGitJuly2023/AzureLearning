@@ -1,0 +1,33 @@
+{
+	"name": "SravzDataFlow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SravxSourceOrdersJuly2023",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          OrderID as integer,",
+				"          ProductID as string,",
+				"          CustomerID as string,",
+				"          UnitPrice as decimal(10,4),",
+				"          Quantity as integer,",
+				"          InsertDateTime as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1"
+			]
+		}
+	}
+}

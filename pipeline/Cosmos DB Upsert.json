@@ -1,0 +1,98 @@
+{
+	"name": "Cosmos DB Upsert",
+	"properties": {
+		"activities": [
+			{
+				"name": "Cosmos db Orders Copy Upsert",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "CosmosDbSqlApiSink",
+						"writeBehavior": "upsert",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "OrderID",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['id']"
+								}
+							},
+							{
+								"source": {
+									"name": "ProductID",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['ProductID']"
+								}
+							},
+							{
+								"source": {
+									"name": "CustomerID",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['CustomerID']"
+								}
+							},
+							{
+								"source": {
+									"name": "UnitPrice",
+									"type": "Decimal"
+								},
+								"sink": {
+									"path": "$['UnitPrice']"
+								}
+							},
+							{
+								"source": {
+									"name": "Quantity",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['Quantity']"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SravxSourceOrdersJuly2023",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CosmosDbOrdersV2",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2023-07-20T18:25:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

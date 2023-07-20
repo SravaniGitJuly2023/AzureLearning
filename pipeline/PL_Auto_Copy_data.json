@@ -1,0 +1,123 @@
+{
+	"name": "PL_Auto_Copy_data",
+	"properties": {
+		"activities": [
+			{
+				"name": "OldWM",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select tablename,watermarkvalue OldWaterMark from [dbo].[watermarktable]\nwhere tablename='orders'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SravzTargetWaterMarkJuly2023",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "NewWM",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select max(insertdatetime) as NewWatermark from orders ",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SravxSourceOrdersJuly2023",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Auto_Copy_Orders",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "OldWM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "NewWM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "select * from orders where insertdatetime > '@{activity('OldWM').output.firstrow.oldwatermark}' and insertdatetime <= '@{activity('NewWM').output.firstRow.Newwatermark}'",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SravxSourceOrdersJuly2023",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SravzTargetIOrdersJuly2023",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2023-07-09T15:04:32Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
