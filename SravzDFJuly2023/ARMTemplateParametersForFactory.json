@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "SravzDFJuly2023"
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": ""
+		},
+		"AzureSqlLSTarget_connectionString": {
+			"value": ""
+		},
+		"LS_CosmosDbNoSql_connectionString": {
+			"value": ""
+		}
+	}
+}
