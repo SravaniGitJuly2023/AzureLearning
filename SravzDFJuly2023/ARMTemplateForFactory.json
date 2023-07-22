@@ -29,7 +29,7 @@
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "Testing Git repo with this description property .",
+				"description": "Testing Git repo with this description property .\nComment 2",
 				"activities": [
 					{
 						"name": "Cosmos db Orders Copy Upsert",
@@ -662,6 +662,13 @@
 					"connectionString": "[parameters('LS_CosmosDbNoSql_connectionString')]"
 				}
 			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default')]",
+			"type": "Microsoft.DataFactory/factories/globalparameters",
+			"apiVersion": "2018-06-01",
+			"properties": {},
 			"dependsOn": []
 		}
 	]
